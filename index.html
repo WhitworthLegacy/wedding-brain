@@ -90,11 +90,11 @@
     .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
     .field{
       display:flex; flex-direction:column; gap:6px;
-      min-width: 240px;
+      min-width: 220px;
       flex:1;
     }
     label{font-size:13px; color:var(--muted)}
-    input[type="date"], input[type="text"]{
+    input[type="date"], input[type="text"], input[type="number"]{
       width:100%;
       padding:12px 12px;
       border-radius: 12px;
@@ -122,6 +122,12 @@
       color:var(--ink);
       border:1px solid var(--line);
       font-weight:600;
+    }
+    .btn.danger{
+      background:#fff;
+      color:var(--danger);
+      border:1px solid rgba(180,35,24,.35);
+      font-weight:700;
     }
     .btn:active{transform:translateY(1px)}
     .hint{color:var(--muted); font-size:13px; line-height:1.4; margin-top:10px}
@@ -219,6 +225,8 @@
     .footerActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
     .small{font-size:12px; color:var(--muted)}
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono"; font-size:12px}
+
+    .divider{height:1px; background:var(--line); margin:14px 0;}
   </style>
 </head>
 <body>
@@ -260,7 +268,6 @@
           <button class="btn secondary" id="resetBtn">🧹 Reset</button>
         </div>
 
-
         <div class="bigLine" id="daysLeftLine">⏳ Entre une date pour voir le temps restant.</div>
 
         <div class="countdown" aria-label="Countdown">
@@ -284,7 +291,31 @@
       <div class="card">
         <div class="taskHeader">
           <h2 style="margin:0">Tâches essentielles</h2>
+        </div>
 
+        <div class="divider"></div>
+
+        <h2 style="margin:0 0 12px; font-size:16px;">➕ Ajouter une tâche</h2>
+        <div class="row">
+          <div class="field">
+            <label>Nom de la tâche</label>
+            <input id="newTaskName" type="text" placeholder="Ex: Envoyer les faire-parts" />
+          </div>
+          <div class="field" style="max-width:140px">
+            <label>Deadline (J-)</label>
+            <input id="newTaskDays" type="number" min="0" step="1" placeholder="90" />
+          </div>
+          <div class="field" style="max-width:140px">
+            <label>Poids</label>
+            <input id="newTaskWeight" type="number" min="1" step="1" value="1" />
+          </div>
+        </div>
+        <div class="footerActions" style="margin-top:10px">
+          <button class="btn secondary" id="addTaskBtn">➕ Ajouter</button>
+        </div>
+        <div class="hint">Astuce : mets un poids 2 pour une tâche “critique” (ex: salle, traiteur).</div>
+
+        <div class="divider"></div>
 
         <div class="taskList" id="taskList"></div>
       </div>
@@ -293,33 +324,42 @@
 
 <script>
   // =========================
-  // TASKS (modifiable)
-  // daysBefore = combien de jours avant Jour J on veut terminer la tâche
-  // weight = poids dans la progression (1 = normal)
+  // CORE TASKS (non supprimables)
   // =========================
-  const TASKS = [
-    { id:"venue", name:"🏠 Réserver la salle", daysBefore:300, weight:2 },
-    { id:"caterer", name:"🍽️ Choisir le traiteur", daysBefore:180, weight:2 },
-    { id:"rings", name:"💍 Commander les alliances", daysBefore:180, weight:1 },
-    { id:"photo", name:"📸 Choisir le photographe", daysBefore:120, weight:1 },
-    { id:"music", name:"🎵 Finaliser la playlist", daysBefore:30, weight:1 },
-    { id:"animation", name:"🎤 Choisir l’animation", daysBefore:90, weight:1 },
-    { id:"deco", name:"✨ Finaliser la décoration", daysBefore:30, weight:1 },
-    { id:"plan", name:"🪑 Faire le plan de table", daysBefore:60, weight:1 },
+  const CORE_TASKS = [
+    { id:"venue", name:"🏠 Réserver la salle", daysBefore:300, weight:2, core:true },
+    { id:"caterer", name:"🍽️ Choisir le traiteur", daysBefore:180, weight:2, core:true },
+    { id:"rings", name:"💍 Commander les alliances", daysBefore:180, weight:1, core:true },
+    { id:"photo", name:"📸 Choisir le photographe", daysBefore:120, weight:1, core:true },
+    { id:"music", name:"🎵 Finaliser la playlist", daysBefore:30,  weight:1, core:true },
+    { id:"animation", name:"🎤 Choisir l’animation", daysBefore:90, weight:1, core:true },
+    { id:"deco", name:"✨ Finaliser la décoration", daysBefore:30, weight:1, core:true },
+    { id:"plan", name:"🪑 Faire le plan de table", daysBefore:60, weight:1, core:true },
   ];
 
   // Status -> score
-  // A faire = 0 ; En cours = 0.5 ; Fait = 1
   const STATUS_SCORE = { "A faire":0, "En cours":0.5, "Fait":1 };
-
   const $ = (id) => document.getElementById(id);
+  const LS_KEY = "wedding_dashboard_v2";
 
-  const LS_KEY = "wedding_dashboard_v1";
   let state = {
-    weddingDateISO: "",    // yyyy-mm-dd
+    weddingDateISO: "",
     coupleName: "",
-    taskStatus: {}         // { [taskId]: "A faire"|"En cours"|"Fait" }
+    taskStatus: {},   // { [taskId]: "A faire"|"En cours"|"Fait" }
+    customTasks: []   // [{id,name,daysBefore,weight,core:false}]
   };
+
+  function getAllTasks(){
+    // Fusion core + custom
+    const custom = Array.isArray(state.customTasks) ? state.customTasks : [];
+    return [...CORE_TASKS, ...custom];
+  }
+
+  function ensureTaskDefaults(){
+    getAllTasks().forEach(t => {
+      if(!state.taskStatus[t.id]) state.taskStatus[t.id] = "A faire";
+    });
+  }
 
   function loadState(){
     // URL param first (share)
@@ -338,10 +378,11 @@
       }
     }catch(e){}
 
-    // defaults for taskStatus
-    TASKS.forEach(t => {
-      if(!state.taskStatus[t.id]) state.taskStatus[t.id] = "A faire";
-    });
+    // harden types
+    if(!Array.isArray(state.customTasks)) state.customTasks = [];
+    if(typeof state.taskStatus !== "object" || !state.taskStatus) state.taskStatus = {};
+
+    ensureTaskDefaults();
   }
 
   function saveState(){
@@ -356,7 +397,6 @@
   }
 
   function dueDateForTask(weddingDate, daysBefore){
-    // due = weddingDate - daysBefore
     const d = new Date(weddingDate.getTime());
     d.setDate(d.getDate() - Number(daysBefore || 0));
     return d;
@@ -368,23 +408,35 @@
     return `<span class="badge">⚪️ À faire</span>`;
   }
 
+  function safeText(s){
+    return String(s || "").replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
   function renderTasks(){
     const list = $("taskList");
     list.innerHTML = "";
 
+    const tasks = getAllTasks();
     const weddingDate = state.weddingDateISO ? new Date(state.weddingDateISO + "T00:00:00") : null;
 
-    TASKS.forEach(task => {
+    tasks.forEach(task => {
       const status = state.taskStatus[task.id] || "A faire";
       const due = weddingDate ? dueDateForTask(weddingDate, task.daysBefore) : null;
       const dueTxt = due ? formatDDMMYYYY(due) : "—";
 
       const el = document.createElement("div");
       el.className = "task";
+
+      const delBtn = task.core ? "" : `
+        <button class="btn danger" data-del="${task.id}" title="Supprimer">🗑️</button>
+      `;
+
       el.innerHTML = `
         <div class="taskLeft">
-          <div class="taskName">${task.name}</div>
-          <div class="taskMeta">À terminer au plus tard : <strong>${dueTxt}</strong> (J-${task.daysBefore})</div>
+          <div class="taskName">${safeText(task.name)}</div>
+          <div class="taskMeta">À terminer au plus tard : <strong>${dueTxt}</strong> (J-${Number(task.daysBefore)||0}) · Poids: ${Number(task.weight)||1}</div>
         </div>
         <div class="taskRight">
           ${badgeForStatus(status)}
@@ -393,6 +445,7 @@
             <option ${status==="En cours"?"selected":""}>En cours</option>
             <option ${status==="Fait"?"selected":""}>Fait</option>
           </select>
+          ${delBtn}
         </div>
       `;
       list.appendChild(el);
@@ -407,14 +460,29 @@
         renderAll();
       });
     });
+
+    // bind delete
+    list.querySelectorAll("button[data-del]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = e.currentTarget.getAttribute("data-del");
+        if(!confirm("Supprimer cette tâche ?")) return;
+
+        state.customTasks = (state.customTasks || []).filter(t => t.id !== id);
+        delete state.taskStatus[id];
+        ensureTaskDefaults();
+        saveState();
+        renderAll();
+      });
+    });
   }
 
   function computeProgress(){
+    const tasks = getAllTasks();
     let weightedDone = 0;
     let weightedTotal = 0;
 
-    TASKS.forEach(t => {
-      const w = Number(t.weight || 1);
+    tasks.forEach(t => {
+      const w = Math.max(1, Number(t.weight || 1));
       const s = state.taskStatus[t.id] || "A faire";
       weightedTotal += w;
       weightedDone += w * (STATUS_SCORE[s] ?? 0);
@@ -463,7 +531,37 @@
     $("daysLeftLine").textContent = `⏳ Il te reste ${days} jours avant le Jour J.`;
   }
 
+  function addTask(){
+    const name = $("newTaskName").value.trim();
+    const days = Number($("newTaskDays").value);
+    const weight = Math.max(1, Number($("newTaskWeight").value || 1));
+
+    if(!name){
+      alert("⚠️ Mets un nom de tâche.");
+      return;
+    }
+    if(Number.isNaN(days) || days < 0){
+      alert("⚠️ Le champ J- doit être un nombre (0 ou +).");
+      return;
+    }
+
+    const id = "t_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,7);
+
+    const task = { id, name, daysBefore: days, weight, core:false };
+    state.customTasks = [...(state.customTasks || []), task];
+    state.taskStatus[id] = "A faire";
+
+    // reset fields
+    $("newTaskName").value = "";
+    $("newTaskDays").value = "";
+    $("newTaskWeight").value = "1";
+
+    saveState();
+    renderAll();
+  }
+
   function renderAll(){
+    ensureTaskDefaults();
     renderTasks();
     updateProgressUI();
     updateCountdown();
@@ -481,10 +579,10 @@
     });
 
     $("resetBtn").addEventListener("click", () => {
-      if(!confirm("Reset : effacer la date + statuses ?")) return;
+      if(!confirm("Reset : effacer la date + statuses + tâches ajoutées ?")) return;
       localStorage.removeItem(LS_KEY);
-      state = { weddingDateISO:"", coupleName:"", taskStatus:{} };
-      loadState(); // reinit defaults
+      state = { weddingDateISO:"", coupleName:"", taskStatus:{}, customTasks:[] };
+      loadState();
       $("weddingDate").value = "";
       $("coupleName").value = "";
       saveState();
@@ -504,6 +602,18 @@
       }catch(e){
         prompt("Copie le lien :", shareUrl);
       }
+    });
+
+    $("addTaskBtn").addEventListener("click", addTask);
+
+    // Enter to add
+    ["newTaskName","newTaskDays","newTaskWeight"].forEach(id => {
+      $(id).addEventListener("keydown", (e) => {
+        if(e.key === "Enter"){
+          e.preventDefault();
+          addTask();
+        }
+      });
     });
   }
 
