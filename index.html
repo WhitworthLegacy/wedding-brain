@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wedding Planner Dashboard</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --ink:#111;
+      --muted:#6b6b6b;
+      --line:#e9e9e9;
+      --card:#fafafa;
+      --shadow: 0 12px 30px rgba(0,0,0,.08);
+      --accent:#111;
+      --good:#1a7f37;
+      --warn:#b54708;
+      --danger:#b42318;
+      --radius:18px;
+      --max:1100px;
+      font-synthesis-weight:none;
+      text-rendering:geometricPrecision;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 18px 60px}
+    .hero{
+      border:1px solid var(--line);
+      background: linear-gradient(135deg, #fff, #f7f7f7);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .heroTop{
+      padding:28px 22px;
+      display:flex; gap:16px; align-items:center; justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    h1{
+      margin:0;
+      font-size: clamp(26px, 3.2vw, 44px);
+      letter-spacing:-.03em;
+    }
+    .sub{
+      margin:8px 0 0;
+      color:var(--muted);
+      line-height:1.5;
+      max-width:720px;
+    }
+    .pillRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .pill{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:8px 10px;
+      border-radius: 999px;
+      font-size:13px;
+      color:var(--muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    .card{
+      border:1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    .card h2{
+      margin:0 0 12px;
+      font-size:18px;
+      letter-spacing:-.01em;
+    }
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .field{
+      display:flex; flex-direction:column; gap:6px;
+      min-width: 240px;
+      flex:1;
+    }
+    label{font-size:13px; color:var(--muted)}
+    input[type="date"], input[type="text"]{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      outline:none;
+      font-size:14px;
+      background:#fff;
+    }
+    .btn{
+      border:1px solid var(--ink);
+      background: var(--ink);
+      color:#fff;
+      padding:12px 14px;
+      border-radius: 12px;
+      font-weight:600;
+      cursor:pointer;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      user-select:none;
+    }
+    .btn.secondary{
+      background:#fff;
+      color:var(--ink);
+      border:1px solid var(--line);
+      font-weight:600;
+    }
+    .btn:active{transform:translateY(1px)}
+    .hint{color:var(--muted); font-size:13px; line-height:1.4; margin-top:10px}
+
+    .countdown{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-top:10px;
+    }
+    .box{
+      width:86px; height:86px;
+      border:3px solid #111;
+      border-radius: 12px;
+      background:#fff;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      line-height:1.1;
+    }
+    .box .n{font-size:20px; font-weight:800}
+    .box .t{font-size:12px; color:var(--muted); font-weight:700}
+    .bigLine{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius: 14px;
+      background: #f7f7f7;
+      border: 1px solid var(--line);
+      font-weight:700;
+      letter-spacing:-.01em;
+    }
+
+    .progressWrap{
+      margin-top:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius: 999px;
+      overflow:hidden;
+      height:14px;
+    }
+    .progressBar{
+      height:100%;
+      width:0%;
+      background: #111;
+      transition: width .25s ease;
+    }
+    .progressMeta{
+      display:flex; justify-content:space-between; margin-top:10px;
+      font-size:13px; color:var(--muted);
+    }
+
+    .taskHeader{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      flex-wrap:wrap;
+    }
+    .taskList{
+      margin-top:10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .task{
+      border:1px solid var(--line);
+      background: var(--card);
+      padding:12px 12px;
+      border-radius: 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .taskLeft{display:flex; flex-direction:column; gap:4px}
+    .taskName{font-weight:700}
+    .taskMeta{font-size:12px; color:var(--muted)}
+    .taskRight{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    select{
+      padding:10px 10px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:600;
+      font-size:13px;
+    }
+    .badge{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--muted);
+      font-weight:700;
+    }
+    .badge.good{border-color: rgba(26,127,55,.35); color:var(--good)}
+    .badge.warn{border-color: rgba(181,71,8,.35); color:var(--warn)}
+    .badge.danger{border-color: rgba(180,35,24,.35); color:var(--danger)}
+    .footerActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .small{font-size:12px; color:var(--muted)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono"; font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="heroTop">
+        <div>
+          <h1>✨ Ton mariage, organisé en douceur ✨</h1>
+          <p class="sub">Entre ta date, et le planner te montre immédiatement ce qu’il reste à faire + la progression globale. (Tout est sauvegardé automatiquement.)</p>
+          <div class="pillRow" style="margin-top:10px">
+            <div class="pill">👑 Mode PRO <strong style="color:#111">Dashboard</strong></div>
+            <div class="pill">⏳ Countdown live</div>
+            <div class="pill">✅ Checklist + progression</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <div class="card">
+        <h2>Quelle est la date de ton mariage ?</h2>
+
+        <div class="row">
+          <div class="field">
+            <label>Date du mariage</label>
+            <input id="weddingDate" type="date" />
+          </div>
+          <div class="field">
+            <label>Noms des mariés (optionnel)</label>
+            <input id="coupleName" type="text" placeholder="Ex: Jonathan & Agatha" />
+          </div>
+        </div>
+
+        <div class="footerActions">
+          <button class="btn" id="saveBtn">💾 Sauvegarder</button>
+          <button class="btn secondary" id="shareBtn">🔗 Générer un lien</button>
+          <button class="btn secondary" id="resetBtn">🧹 Reset</button>
+        </div>
+
+        <div class="hint">
+          Astuce : tu peux aussi partager la page avec une date pré-remplie via l’URL (le bouton “Générer un lien” le fait).
+        </div>
+
+        <div class="bigLine" id="daysLeftLine">⏳ Entre une date pour voir le temps restant.</div>
+
+        <div class="countdown" aria-label="Countdown">
+          <div class="box"><div class="n" id="cdDays">—</div><div class="t">jours</div></div>
+          <div class="box"><div class="n" id="cdHours">—</div><div class="t">heures</div></div>
+          <div class="box"><div class="n" id="cdMins">—</div><div class="t">mins</div></div>
+          <div class="box"><div class="n" id="cdSecs">—</div><div class="t">secs</div></div>
+        </div>
+
+        <div style="margin-top:18px">
+          <h2>Progression globale</h2>
+          <div class="progressWrap"><div class="progressBar" id="progressBar"></div></div>
+          <div class="progressMeta">
+            <div id="progressText">0% complété</div>
+            <div class="mono" id="progressRaw">0 / 0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="card">
+        <div class="taskHeader">
+          <h2 style="margin:0">Tâches essentielles</h2>
+          <div class="small">Tu peux modifier la liste dans le code (section <span class="mono">TASKS</span>).</div>
+        </div>
+
+        <div class="taskList" id="taskList"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // =========================
+  // TASKS (modifiable)
+  // daysBefore = combien de jours avant Jour J on veut terminer la tâche
+  // weight = poids dans la progression (1 = normal)
+  // =========================
+  const TASKS = [
+    { id:"venue", name:"🏠 Réserver la salle", daysBefore:300, weight:2 },
+    { id:"caterer", name:"🍽️ Choisir le traiteur", daysBefore:180, weight:2 },
+    { id:"rings", name:"💍 Commander les alliances", daysBefore:180, weight:1 },
+    { id:"photo", name:"📸 Choisir le photographe", daysBefore:120, weight:1 },
+    { id:"music", name:"🎵 Finaliser la playlist", daysBefore:30, weight:1 },
+    { id:"animation", name:"🎤 Choisir l’animation", daysBefore:90, weight:1 },
+    { id:"deco", name:"✨ Finaliser la décoration", daysBefore:30, weight:1 },
+    { id:"plan", name:"🪑 Faire le plan de table", daysBefore:60, weight:1 },
+  ];
+
+  // Status -> score
+  // A faire = 0 ; En cours = 0.5 ; Fait = 1
+  const STATUS_SCORE = { "A faire":0, "En cours":0.5, "Fait":1 };
+
+  const $ = (id) => document.getElementById(id);
+
+  const LS_KEY = "wedding_dashboard_v1";
+  let state = {
+    weddingDateISO: "",    // yyyy-mm-dd
+    coupleName: "",
+    taskStatus: {}         // { [taskId]: "A faire"|"En cours"|"Fait" }
+  };
+
+  function loadState(){
+    // URL param first (share)
+    const url = new URL(window.location.href);
+    const d = url.searchParams.get("date");
+    const n = url.searchParams.get("name");
+    if (d) state.weddingDateISO = d;
+    if (n) state.coupleName = decodeURIComponent(n);
+
+    // then localStorage
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        state = { ...state, ...parsed };
+      }
+    }catch(e){}
+
+    // defaults for taskStatus
+    TASKS.forEach(t => {
+      if(!state.taskStatus[t.id]) state.taskStatus[t.id] = "A faire";
+    });
+  }
+
+  function saveState(){
+    localStorage.setItem(LS_KEY, JSON.stringify(state));
+  }
+
+  function formatDDMMYYYY(date){
+    const dd = String(date.getDate()).padStart(2,"0");
+    const mm = String(date.getMonth()+1).padStart(2,"0");
+    const yyyy = date.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  }
+
+  function dueDateForTask(weddingDate, daysBefore){
+    // due = weddingDate - daysBefore
+    const d = new Date(weddingDate.getTime());
+    d.setDate(d.getDate() - Number(daysBefore || 0));
+    return d;
+  }
+
+  function badgeForStatus(status){
+    if(status === "Fait") return `<span class="badge good">✅ Fait</span>`;
+    if(status === "En cours") return `<span class="badge warn">🟠 En cours</span>`;
+    return `<span class="badge">⚪️ À faire</span>`;
+  }
+
+  function renderTasks(){
+    const list = $("taskList");
+    list.innerHTML = "";
+
+    const weddingDate = state.weddingDateISO ? new Date(state.weddingDateISO + "T00:00:00") : null;
+
+    TASKS.forEach(task => {
+      const status = state.taskStatus[task.id] || "A faire";
+      const due = weddingDate ? dueDateForTask(weddingDate, task.daysBefore) : null;
+      const dueTxt = due ? formatDDMMYYYY(due) : "—";
+
+      const el = document.createElement("div");
+      el.className = "task";
+      el.innerHTML = `
+        <div class="taskLeft">
+          <div class="taskName">${task.name}</div>
+          <div class="taskMeta">À terminer au plus tard : <strong>${dueTxt}</strong> (J-${task.daysBefore})</div>
+        </div>
+        <div class="taskRight">
+          ${badgeForStatus(status)}
+          <select data-task="${task.id}">
+            <option ${status==="A faire"?"selected":""}>A faire</option>
+            <option ${status==="En cours"?"selected":""}>En cours</option>
+            <option ${status==="Fait"?"selected":""}>Fait</option>
+          </select>
+        </div>
+      `;
+      list.appendChild(el);
+    });
+
+    // bind selects
+    list.querySelectorAll("select[data-task]").forEach(sel => {
+      sel.addEventListener("change", (e) => {
+        const id = e.target.getAttribute("data-task");
+        state.taskStatus[id] = e.target.value;
+        saveState();
+        renderAll();
+      });
+    });
+  }
+
+  function computeProgress(){
+    let weightedDone = 0;
+    let weightedTotal = 0;
+
+    TASKS.forEach(t => {
+      const w = Number(t.weight || 1);
+      const s = state.taskStatus[t.id] || "A faire";
+      weightedTotal += w;
+      weightedDone += w * (STATUS_SCORE[s] ?? 0);
+    });
+
+    const pct = weightedTotal ? Math.round((weightedDone / weightedTotal) * 100) : 0;
+    return { pct, weightedDone, weightedTotal };
+  }
+
+  function updateProgressUI(){
+    const { pct, weightedDone, weightedTotal } = computeProgress();
+    $("progressBar").style.width = `${pct}%`;
+    $("progressText").textContent = `${pct}% complété`;
+    $("progressRaw").textContent = `${weightedDone.toFixed(1)} / ${weightedTotal.toFixed(0)} (pondéré)`;
+  }
+
+  function updateCountdown(){
+    const dateISO = state.weddingDateISO;
+    if(!dateISO){
+      $("daysLeftLine").textContent = "⏳ Entre une date pour voir le temps restant.";
+      ["cdDays","cdHours","cdMins","cdSecs"].forEach(id => $(id).textContent="—");
+      return;
+    }
+
+    const target = new Date(dateISO + "T00:00:00");
+    const now = new Date();
+    const diffMs = target - now;
+
+    if(diffMs <= 0){
+      $("daysLeftLine").textContent = "🎉 C’est le jour J (ou il est passé) !";
+      ["cdDays","cdHours","cdMins","cdSecs"].forEach(id => $(id).textContent="0");
+      return;
+    }
+
+    const totalSec = Math.floor(diffMs / 1000);
+    const days = Math.floor(totalSec / (3600*24));
+    const hours = Math.floor((totalSec % (3600*24)) / 3600);
+    const mins = Math.floor((totalSec % 3600) / 60);
+    const secs = totalSec % 60;
+
+    $("cdDays").textContent = days;
+    $("cdHours").textContent = String(hours).padStart(2,"0");
+    $("cdMins").textContent = String(mins).padStart(2,"0");
+    $("cdSecs").textContent = String(secs).padStart(2,"0");
+
+    $("daysLeftLine").textContent = `⏳ Il te reste ${days} jours avant le Jour J.`;
+  }
+
+  function renderAll(){
+    renderTasks();
+    updateProgressUI();
+    updateCountdown();
+  }
+
+  function bindUI(){
+    $("weddingDate").value = state.weddingDateISO || "";
+    $("coupleName").value = state.coupleName || "";
+
+    $("saveBtn").addEventListener("click", () => {
+      state.weddingDateISO = $("weddingDate").value;
+      state.coupleName = $("coupleName").value.trim();
+      saveState();
+      renderAll();
+    });
+
+    $("resetBtn").addEventListener("click", () => {
+      if(!confirm("Reset : effacer la date + statuses ?")) return;
+      localStorage.removeItem(LS_KEY);
+      state = { weddingDateISO:"", coupleName:"", taskStatus:{} };
+      loadState(); // reinit defaults
+      $("weddingDate").value = "";
+      $("coupleName").value = "";
+      saveState();
+      renderAll();
+    });
+
+    $("shareBtn").addEventListener("click", async () => {
+      const d = $("weddingDate").value || state.weddingDateISO || "";
+      const n = encodeURIComponent($("coupleName").value.trim() || state.coupleName || "");
+      const url = new URL(window.location.href);
+      if(d) url.searchParams.set("date", d);
+      if(n) url.searchParams.set("name", n);
+      const shareUrl = url.toString();
+      try{
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Lien copié ✅");
+      }catch(e){
+        prompt("Copie le lien :", shareUrl);
+      }
+    });
+  }
+
+  // init
+  loadState();
+  bindUI();
+  renderAll();
+  setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>
