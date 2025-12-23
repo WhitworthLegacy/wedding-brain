@@ -320,15 +320,10 @@
             <label>Deadline (J-)</label>
             <input id="newTaskDays" type="number" min="0" step="1" placeholder="90" />
           </div>
-          <div class="field" style="max-width:140px">
-            <label>Poids</label>
-            <input id="newTaskWeight" type="number" min="1" step="1" value="1" />
-          </div>
         </div>
         <div class="footerActions" style="margin-top:10px">
           <button class="btn" id="addTaskBtn">➕ Ajouter</button>
         </div>
-        <div class="hint">Astuce : mets un poids 2 pour une tâche “critique” (ex: salle, traiteur).</div>
 
         <div class="divider"></div>
 
@@ -344,14 +339,14 @@
   // CORE TASKS (non supprimables)
   // =========================
   const CORE_TASKS = [
-    { id:"venue", name:"🏠 Réserver la salle", daysBefore:300, weight:2, core:true },
-    { id:"caterer", name:"🍽️ Choisir le traiteur", daysBefore:180, weight:2, core:true },
-    { id:"rings", name:"💍 Commander les alliances", daysBefore:180, weight:1, core:true },
-    { id:"photo", name:"📸 Choisir le photographe", daysBefore:120, weight:1, core:true },
-    { id:"music", name:"🎵 Finaliser la playlist", daysBefore:30,  weight:1, core:true },
-    { id:"animation", name:"🎤 Choisir l’animation", daysBefore:90, weight:1, core:true },
-    { id:"deco", name:"✨ Finaliser la décoration", daysBefore:30, weight:1, core:true },
-    { id:"plan", name:"🪑 Faire le plan de table", daysBefore:60, weight:1, core:true },
+    { id:"venue", name:"🏠 Réserver la salle", daysBefore:300, core:true },
+    { id:"caterer", name:"🍽️ Choisir le traiteur", daysBefore:180, core:true },
+    { id:"rings", name:"💍 Commander les alliances", daysBefore:180, core:true },
+    { id:"photo", name:"📸 Choisir le photographe", daysBefore:120, core:true },
+    { id:"music", name:"🎵 Finaliser la playlist", daysBefore:30, core:true },
+    { id:"animation", name:"🎤 Choisir l’animation", daysBefore:90, core:true },
+    { id:"deco", name:"✨ Finaliser la décoration", daysBefore:30, core:true },
+    { id:"plan", name:"🪑 Faire le plan de table", daysBefore:60, core:true },
   ];
 
   // Status -> score
@@ -447,14 +442,13 @@
       el.className = "task";
 
       const delBtn = task.core ? "" : `
-        <button class="btn danger" data-del="${task.id}" title="Supprimer">🗑️</button>
+        <button type="button" class="btn danger" data-del="${task.id}" title="Supprimer">🗑️</button>
       `;
 
       el.innerHTML = `
         <div class="taskLeft">
           <div class="taskName">${safeText(task.name)}</div>
-          <div class="taskMeta">À terminer au plus tard : <strong>${dueTxt}</strong> (J-${Number(task.daysBefore)||0}) · Poids: ${Number(task.weight)||1}</div>
-        </div>
+          <div class="taskMeta">À terminer au plus tard : <strong>${dueTxt}</strong> (J-${Number(task.daysBefore)||0})</div>
         <div class="taskRight">
           ${badgeForStatus(status)}
           <select data-task="${task.id}">
@@ -495,26 +489,24 @@
 
   function computeProgress(){
     const tasks = getAllTasks();
-    let weightedDone = 0;
-    let weightedTotal = 0;
-
+    const total = tasks.length || 0;
+  
+    let done = 0;
     tasks.forEach(t => {
-      const w = Math.max(1, Number(t.weight || 1));
       const s = state.taskStatus[t.id] || "A faire";
-      weightedTotal += w;
-      weightedDone += w * (STATUS_SCORE[s] ?? 0);
+      done += (STATUS_SCORE[s] ?? 0);
     });
-
-    const pct = weightedTotal ? Math.round((weightedDone / weightedTotal) * 100) : 0;
-    return { pct, weightedDone, weightedTotal };
+  
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    return { pct, done, total };
   }
 
-  function updateProgressUI(){
-    const { pct, weightedDone, weightedTotal } = computeProgress();
-    $("progressBar").style.width = `${pct}%`;
-    $("progressText").textContent = `${pct}% complété`;
-    $("progressRaw").textContent = `${weightedDone.toFixed(1)} / ${weightedTotal.toFixed(0)} (pondéré)`;
-  }
+function updateProgressUI(){
+  const { pct, done, total } = computeProgress();
+  $("progressBar").style.width = `${pct}%`;
+  $("progressText").textContent = `${pct}% complété`;
+  $("progressRaw").textContent = `${done.toFixed(1)} / ${total}`;
+}
 
   function updateCountdown(){
     const dateISO = state.weddingDateISO;
@@ -548,34 +540,31 @@
     $("daysLeftLine").textContent = `⏳ Il te reste ${days} jours avant le Jour J.`;
   }
 
-  function addTask(){
-    const name = $("newTaskName").value.trim();
-    const days = Number($("newTaskDays").value);
-    const weight = Math.max(1, Number($("newTaskWeight").value || 1));
+function addTask(){
+  const name = $("newTaskName").value.trim();
+  const days = Number($("newTaskDays").value);
 
-    if(!name){
-      alert("⚠️ Mets un nom de tâche.");
-      return;
-    }
-    if(Number.isNaN(days) || days < 0){
-      alert("⚠️ Le champ J- doit être un nombre (0 ou +).");
-      return;
-    }
-
-    const id = "t_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,7);
-
-    const task = { id, name, daysBefore: days, weight, core:false };
-    state.customTasks = [...(state.customTasks || []), task];
-    state.taskStatus[id] = "A faire";
-
-    // reset fields
-    $("newTaskName").value = "";
-    $("newTaskDays").value = "";
-    $("newTaskWeight").value = "1";
-
-    saveState();
-    renderAll();
+  if(!name){
+    alert("⚠️ Mets un nom de tâche.");
+    return;
   }
+  if(Number.isNaN(days) || days < 0){
+    alert("⚠️ Le champ J- doit être un nombre (0 ou +).");
+    return;
+  }
+
+  const id = "t_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,7);
+
+  const task = { id, name, daysBefore: days, core:false };
+  state.customTasks = [...(state.customTasks || []), task];
+  state.taskStatus[id] = "A faire";
+
+  $("newTaskName").value = "";
+  $("newTaskDays").value = "";
+
+  saveState();
+  renderAll();
+}
 
   function renderAll(){
     ensureTaskDefaults();
@@ -629,13 +618,28 @@
     $("addTaskBtn").addEventListener("click", addTask);
 
     // Enter to add
-    ["newTaskName","newTaskDays","newTaskWeight"].forEach(id => {
+    ["newTaskName","newTaskDays"].forEach(id => {
       $(id).addEventListener("keydown", (e) => {
         if(e.key === "Enter"){
           e.preventDefault();
           addTask();
         }
-
+      
+        $("taskList").addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-del]");
+          if(!btn) return;
+        
+          const id = btn.getAttribute("data-del");
+          if(!id) return;
+        
+          if(!confirm("Supprimer cette tâche ?")) return;
+        
+          state.customTasks = (state.customTasks || []).filter(t => t.id !== id);
+          delete state.taskStatus[id];
+          ensureTaskDefaults();
+          saveState();
+          renderAll();
+        });
 
       });
     });
