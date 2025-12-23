@@ -227,6 +227,21 @@
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono"; font-size:12px}
 
     .divider{height:1px; background:var(--line); margin:14px 0;}
+
+    #fabAdd{
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      background:#111;
+      color:#fff;
+      font-size:28px;
+      border:none;
+      cursor:pointer;
+      box-shadow:0 12px 30px rgba(0,0,0,.25);
+    }
   </style>
 </head>
 <body>
@@ -321,6 +336,8 @@
       </div>
     </div>
   </div>
+
+  <button id="fabAdd" type="button" aria-label="Ajouter une tâche">＋</button>
 
 <script>
   // =========================
@@ -604,6 +621,11 @@
       }
     });
 
+       $("fabAdd").addEventListener("click", () => {
+          document.getElementById("addTaskSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          $("newTaskName").focus();
+        });
+
     $("addTaskBtn").addEventListener("click", addTask);
 
     // Enter to add
@@ -613,6 +635,8 @@
           e.preventDefault();
           addTask();
         }
+
+
       });
     });
   }
@@ -623,5 +647,6 @@
   renderAll();
   setInterval(updateCountdown, 1000);
 </script>
+
 </body>
 </html>
