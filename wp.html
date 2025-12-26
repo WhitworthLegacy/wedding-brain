@@ -36,6 +36,24 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  /* Global link color reset inside CarnetMariage block */
+  .cm-wrap a,
+  .cm-wrap a:visited{
+    color: var(--muted);
+    text-decoration: none;
+  }
+  
+  .cm-wrap a:hover{
+    color: var(--muted);
+    text-decoration: underline;
+  }
+  
+  /* Keep buttons unchanged */
+  .cm-wrap a.cm-btn,
+  .cm-wrap a.cm-btn:visited{
+    color: inherit;
+    text-decoration: none;
+  }
   .cm-container{
     max-width: var(--container);
     margin: 0 auto;
@@ -99,7 +117,7 @@
     border: 1px solid rgba(31,31,31,.06);
     background: rgba(250,249,247,.7);
   }
-  .cm-nav a:hover{ color: var(--ink); }
+  .cm-nav a:hover{ color: var(--muted); }
 
   /* Buttons */
   .cm-btn{
@@ -235,6 +253,7 @@
 
   /* Sections */
   .cm-section{
+    max-width: var(--container);
     padding: 64px 0;
     padding-left: 180px; padding-right: 180px;
   }
@@ -627,7 +646,7 @@ details.cm-acc p,
 
     <!-- Topbar -->
     <div class="cm-topbar">
-      <a class="cm-brand" href="#top">
+      <a class="cm-brand">
           <div class="cm-mark">CM</div>
         <div>
           <strong>CarnetMariage</strong>
