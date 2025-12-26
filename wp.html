@@ -66,18 +66,16 @@
   }
   .cm-mark{
     width: 42px; height: 42px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, rgba(216,167,177,.95), rgba(234,212,216,.85));
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(31,31,31,.06);
+    border-radius: 16px;
+    background:
+      radial-gradient(16px 16px at 30% 25%, rgba(250,249,247,.75), transparent 60%),
+      linear-gradient(135deg, rgba(216,167,177,.95), rgba(234,212,216,.88));
+    box-shadow: 0 14px 34px rgba(0,0,0,.08);
+    border: 1px solid rgba(31,31,31,.07);
     display:grid;
     place-items:center;
-    font-weight:700;
-  }
-  .cm-brand strong{
-    display:block;
-    font-size: 15px;
-    letter-spacing: .2px;
+    font-weight: 800;
+    letter-spacing: .5px;
   }
   .cm-brand span{
     display:block;
@@ -238,6 +236,7 @@
   /* Sections */
   .cm-section{
     padding: 64px 0;
+    padding-left: 180px; padding-right: 180px;
   }
   .cm-section h2{
     font-size: clamp(24px, 3vw, 34px);
@@ -547,27 +546,26 @@ details.cm-acc p,
     padding: 6px;
   }
 
-@media (max-width: 980px){
-  .cm-footer-grid{ grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 560px){
-  .cm-footer-grid{ grid-template-columns: 1fr; }
-}
+
 
   /* Responsive */
-  @media (max-width: 980px){
+  @media (max-width: 560px){
     .cm-hero{ grid-template-columns: 1fr; }
     .cm-grid-3{ grid-template-columns: 1fr; }
     .cm-beforeafter{ grid-template-columns: 1fr; }
     .cm-pricing{ grid-template-columns: 1fr; }
     .cm-bonus{ grid-template-columns: 1fr; }
     .cm-faq{ grid-template-columns: 1fr; }
+    .cm-footer-grid{ grid-template-columns: 1fr; }
+    .cm-wow{ grid-template-columns: 1fr; padding-left: 18px; padding-right: 18px; }
   }
 
 
   /* ===== WOW Block (doux) ===== */
 .cm-wow{
   padding: 26px;
+  padding-left: 34px;
+  padding-right: 34px;
   border-radius: calc(var(--radius) + 6px);
   border: 1px solid rgba(31,31,31,.08);
   background:
@@ -620,10 +618,6 @@ details.cm-acc p,
 .cm-wow-cta small{
   color: var(--muted);
   font-size: 12.5px;
-}
-
-@media (max-width: 980px){
-  .cm-wow{ grid-template-columns: 1fr; }
 }
   
 </style>
