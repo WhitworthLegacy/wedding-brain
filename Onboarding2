@@ -1,0 +1,191 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
+
+  :root{
+    --ivory:#FAF9F7; --blush:#EAD4D8; --greige:#C7BEB8; --silver:#C9CCD6; --cta:#D8A7B1;
+    --ink:#1f1f1f; --muted:#5d5d5d; --radius:22px;
+    --shadow: 0 16px 44px rgba(0,0,0,.10); --shadow-soft: 0 10px 26px rgba(0,0,0,.06);
+  }
+
+  html, body{ overflow-x:hidden; }
+
+  .cmOB{
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+    min-height: 86vh;
+    background:
+      radial-gradient(1200px 600px at 20% 0%, rgba(234,212,216,.58), transparent 60%),
+      radial-gradient(900px 520px at 90% 10%, rgba(201,204,214,.55), transparent 55%),
+      var(--ivory);
+    color: var(--ink);
+    font-family: "Libre Baskerville", Georgia, serif;
+    display:grid; place-items:center;
+    padding: 28px 18px;
+  }
+
+  .cmOB-card{
+    width:min(760px,100%);
+    background: rgba(250,249,247,.85);
+    border: 1px solid rgba(31,31,31,.08);
+    border-radius: calc(var(--radius) + 8px);
+    box-shadow: var(--shadow);
+    padding: 26px;
+  }
+
+  .cmOB-top{
+    display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap;
+    margin-bottom: 10px;
+  }
+  .cmOB-progress{
+    display:flex; align-items:center; gap: 10px;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    color: var(--muted); font-size: 13px;
+  }
+  .cmOB-bar{
+    width: 180px; height: 8px; border-radius: 999px;
+    background: rgba(201,204,214,.35);
+    overflow:hidden;
+    border: 1px solid rgba(31,31,31,.06);
+  }
+  .cmOB-bar > i{ display:block; width:66%; height:100%; background: rgba(216,167,177,.75); }
+
+  .cmOB h1{ margin: 10px 0 10px; font-size: clamp(26px, 3.6vw, 38px); line-height: 1.08; }
+  .cmOB-lead{
+    margin:0 0 18px; color: var(--muted);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 15.5px; line-height: 1.8; max-width: 62ch;
+  }
+
+  .cmOB label{
+    display:block; margin: 0 0 8px;
+    color: rgba(0,0,0,.72);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 13px;
+  }
+  .cmOB input{
+    width:100%;
+    padding: 14px 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(31,31,31,.12);
+    background: rgba(250,249,247,.92);
+    outline:none;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 16px;
+  }
+  .cmOB input:focus{ border-color: rgba(216,167,177,.95); box-shadow: 0 0 0 4px rgba(216,167,177,.18); }
+
+  .cmOB-actions{ display:flex; gap: 10px; flex-wrap:wrap; margin-top: 14px; }
+  .cmOB-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap: 10px;
+    padding: 14px 18px; border-radius: 999px;
+    border: 1px solid rgba(31,31,31,.10);
+    cursor:pointer; transition: transform .12s ease, opacity .12s ease, box-shadow .12s ease;
+    font-weight: 650; letter-spacing:.2px; user-select:none; white-space:nowrap;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  }
+  .cmOB-primary{
+    background: linear-gradient(180deg, rgba(216,167,177,.98), rgba(216,167,177,.88));
+    box-shadow: var(--shadow-soft);
+    color: rgba(31,31,31,.92);
+  }
+
+  /* Retour lisible */
+  .cmOB-secondary{
+    background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.82));
+    color: rgba(31,31,31,.82);
+    border: 1px solid rgba(31,31,31,.14);
+    box-shadow: 0 6px 18px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.6);
+    backdrop-filter: blur(6px);
+  }
+  .cmOB-secondary:hover{
+    background: rgba(255,255,255,.95);
+    color: rgba(31,31,31,.95);
+    box-shadow: 0 10px 24px rgba(0,0,0,.10);
+  }
+
+  .cmOB-btn:active{ transform: translateY(1px); }
+
+  .cmOB-error{
+    margin-top: 10px; display:none;
+    color: rgba(0,0,0,.72);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 13px;
+  }
+  .cmOB-error.show{ display:block; }
+
+  @media (max-width:640px){
+    .cmOB-actions .cmOB-btn{ width:100%; }
+    .cmOB-bar{ width: 140px; }
+  }
+</style>
+
+<div class="cmOB">
+  <div class="cmOB-card">
+    <div class="cmOB-top">
+      <div class="cmOB-progress">
+        <span>Étape 2/3</span>
+        <span class="cmOB-bar" aria-hidden="true"><i></i></span>
+      </div>
+      <button class="cmOB-btn cmOB-secondary" id="cmOB2Back" type="button">← Retour</button>
+    </div>
+
+    <h1>Où on vous envoie l’accès ?</h1>
+    <p class="cmOB-lead">On l’utilise uniquement pour votre lien privé (et support si besoin). Pas de spam.</p>
+
+    <div>
+      <label>Email</label>
+      <input id="cmOB2Email" type="email" placeholder="ex: vous@email.com" autocomplete="email" />
+    </div>
+
+    <div class="cmOB-actions">
+      <button class="cmOB-btn cmOB-primary" id="cmOB2Next" type="button">Continuer</button>
+    </div>
+
+    <div class="cmOB-error" id="cmOB2Err">😕 Mets un email valide pour continuer.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const prevUrl = "/onboarding/1";
+  const nextUrl = "/onboarding/3";
+
+  const emailEl = document.getElementById("cmOB2Email");
+  const err = document.getElementById("cmOB2Err");
+
+  console.log("HOST =", window.location.host);
+  console.log("cm_onboarding =", localStorage.getItem("cm_onboarding"));
+
+  const data = safeGet();
+  if(!data.weddingDate || !data.prenom1 || !data.prenom2){
+    window.location.href = "/";
+    return;
+  }
+
+  if(data.email) emailEl.value = data.email;
+
+  document.getElementById("cmOB2Back").addEventListener("click", ()=> window.location.href = prevUrl);
+
+  document.getElementById("cmOB2Next").addEventListener("click", ()=>{
+    const v = (emailEl.value||"").trim().toLowerCase();
+    if(!isValidEmail(v)){
+      err.classList.add("show");
+      return;
+    }
+    err.classList.remove("show");
+    data.email = v;
+    safeSet(data);
+    window.location.href = nextUrl;
+  });
+
+  emailEl.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter") document.getElementById("cmOB2Next").click();
+  });
+
+  function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function safeGet(){ try{ return JSON.parse(localStorage.getItem("cm_onboarding")||"{}"); }catch(e){ return {}; } }
+  function safeSet(o){ try{ localStorage.setItem("cm_onboarding", JSON.stringify(o)); }catch(e){} }
+})();
+</script>
