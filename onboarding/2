@@ -101,19 +101,53 @@
 
 <script>
 (function(){
-  const data = JSON.parse(localStorage.getItem("cm_onboarding") || "{}");
+  const data = (()=>{ try{ return JSON.parse(localStorage.getItem("cm_onboarding")||"{}"); }catch(e){ return {}; } })();
 
-  document.getElementById("back").onclick = ()=>location.href="/onboarding-1";
+  const backBtn = document.getElementById("cmOB1Back");
+  const nextBtn = document.getElementById("next");
+  const emailEl = document.getElementById("email");
+  const errEl   = document.getElementById("err");
 
-  document.getElementById("next").onclick = ()=>{
-    const v = document.getElementById("email").value.trim();
-    if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v)){
-      document.getElementById("err").classList.add("show");
-      return;
-    }
-    data.email = v;
-    localStorage.setItem("cm_onboarding", JSON.stringify(data));
-    location.href="/onboarding-3";
-  };
+  // ✅ Debug visible (tu verras si le script tourne)
+  console.log("OB2 script loaded ✅", location.pathname);
+
+  function go(url){
+    console.log("GO ->", url);
+    window.location.assign(url);
+  }
+
+  if(backBtn){
+    backBtn.addEventListener("click", (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      go("/onboarding-1"); // <-- mets ici TON vrai slug étape 1
+    }, true); // capture
+  }
+
+  if(nextBtn){
+    nextBtn.addEventListener("click", (e)=>{
+      e.preventDefault(); e.stopPropagation();
+
+      const v = (emailEl.value || "").trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+        errEl.classList.add("show");
+        return;
+      }
+      errEl.classList.remove("show");
+
+      data.email = v.toLowerCase();
+      localStorage.setItem("cm_onboarding", JSON.stringify(data));
+
+      go("/onboarding-3"); // <-- mets ici TON vrai slug étape 3
+    }, true); // capture
+  }
+
+  if(emailEl){
+    emailEl.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter"){
+        e.preventDefault();
+        nextBtn.click();
+      }
+    });
+  }
 })();
 </script>
