@@ -66,15 +66,19 @@
 
 <div class="cmOB">
   <div class="cmOB-card">
-    <h1>Votre carnet est prêt ✨</h1>
-    <p style="font-family:system-ui;color:#5d5d5d;">
-      Dernière étape avant votre espace personnel.
+    <h1 class="cm-appear cm-delay-1">
+      Imaginez organiser votre mariage comme ça…
+    </h1>
+    <p class="cm-appear cm-delay-2" style="font-family:system-ui;color:#5d5d5d;">
+      Sans tout garder dans votre tête.  
+      Sans vous demander chaque jour si vous avez oublié quelque chose.
     </p>
 
-    <div id="summary"></div>
+    <div id="summary" class="cm-appear cm-delay-3"></div>
 
-    <button class="cmOB-btn" id="pay">
-      Débloquer mon carnet · 27€
+
+    <button class="cmOB-btn cm-appear cm-delay-3" id="pay">
+      Je veux organiser sereinement · 27€
     </button>
   </div>
 </div>
