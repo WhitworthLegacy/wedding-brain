@@ -43,6 +43,25 @@
   font-weight:600;
   cursor:pointer;
 }
+
+/* ===== Animations douces ===== */
+.cm-appear{
+  opacity: 0;
+  transform: translateY(12px);
+  animation: cmFadeUp .8s ease forwards;
+}
+
+.cm-delay-1{ animation-delay: .15s; }
+.cm-delay-2{ animation-delay: .35s; }
+.cm-delay-3{ animation-delay: .55s; }
+
+@keyframes cmFadeUp{
+  to{
+    opacity:1;
+    transform: translateY(0);
+  }
+}
+
 </style>
 
 <div class="cmOB">
