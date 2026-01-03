@@ -186,6 +186,7 @@
     box-shadow: var(--shadow-soft);
     padding: 26px;
   }
+
   .cm-hero-actions{
     display:flex;
     gap: 12px;
@@ -656,7 +657,7 @@ details.cm-acc p,
           <div class="cm-mark">CM</div>
         <div>
           <strong>CarnetMariage</strong>
-          <span>Planner Notion · calme & organisé</span>
+          <span>Carnet de mariage · guidé & apaisant</span>
         </div>
       </a>
       <nav class="cm-nav">
@@ -664,42 +665,55 @@ details.cm-acc p,
         <a href="#demo">Démo</a>
         <a href="#avis">Avis</a>
         <a href="#prix">Prix</a>
-        <a class="cm-btn cm-btn-primary" href="#prix">Accéder au planner</a>
+        <a class="cm-btn cm-btn-primary" href="/start">Commencer</a>      
       </nav>
     </div>
 
     <!-- Hero -->
     <section class="cm-hero">
       <div class="cm-hero-card">
-        <div class="cm-pill">✨ Planner Notion duplicable + mini guide inclus</div>
+        <div class="cm-pill">✨ Un carnet guidé pour organiser sans stress</div>
 
         <h1>
-          Le planner qui te rend
-          <span class="cm-script">légère</span>
-          pendant les préparatifs — et sereine le jour J.
+          Et si organiser ton mariage
+          devenait enfin
+          <span class="cm-script">simple</span>
+          — et doux ?
         </h1>
 
-        <p>Tu n’es pas “lâchée” avec un template. On te guide doucement pour démarrer sans stress.</p>
+        <p>
+          Tu veux profiter des préparatifs… sans avoir tout dans la tête ?
+          <br/>
+          En quelques questions simples, ton CarnetMariage prend forme.
+          Tu vois un aperçu, tu ressens si c’est fait pour toi,
+          et seulement ensuite tu choisis de débloquer.
+        </p>
 
         <div class="cm-hero-actions">
           <!-- CTA principal (ton lien Stripe/WP ici) -->
           <a class="cm-btn cm-btn-primary" href="/start">Commencer · 1 min</a>
+          <p style="margin:12px 0 0;font-family:system-ui;color:#5d5d5d;font-size:13px;line-height:1.7;">
+            🔒 Sans engagement · ⏱️ 1 minute · aperçu avant de débloquer
+          </p>
          <a class="cm-btn cm-btn-secondary" href="#demo">Voir un aperçu</a>
         </div>
 
-        <div class="cm-trust">
-          <small>🌿 Moins de charge mentale</small>
-          <small>🗓️ Une timeline qui te guide</small>
-          <small>💸 Un budget qui te rassure</small>
-        </div>
+      <div class="cm-trust">
+        <small>✨ Guidé pas à pas</small>
+        <small>👀 Aperçu avant décision</small>
+        <small>🌿 Moins de charge mentale</small>
+      </div>
       </div>
 
       <!-- Mockup / screenshots -->
       <div class="cm-mock" id="demo">
         <div class="cm-mock-title">
           <div>
-            <strong>Démo du planner</strong><br/>
-            <span style="color:var(--muted);font-size:13px;">Remplace par tes screenshots Notion</span>
+            <strong>Aperçu de ton carnet</strong><br/>
+            <span style="color:var(--muted);font-size:13px;">
+              Un aperçu réel de ce que tu vas utiliser au quotidien
+              (budget, étapes, décisions, suivi…)
+            </span>
           </div>
           <div class="cm-windowdots" aria-hidden="true"><i></i><i></i><i></i></div>
         </div>
@@ -721,9 +735,10 @@ details.cm-acc p,
     <section class="cm-section" id="contenu">
       <h2>Ce que tu obtiens</h2>
       <p class="lead">
-        Un planner complet (duplicable) + un mini guide tout simple.
-        L’idée : que tu te sentes accompagnée, pas “submergée”.
-        Tu avances pas à pas — sans te demander chaque jour par où recommencer.
+        CCe n’est pas “juste un outil”.
+        C’est un petit espace qui te remet la tête au calme :
+        tu sais quoi faire, quand le faire, et où tout ranger.
+        Et surtout… tu n’as plus besoin de porter tout ça seule.
       </p>
 
       <div class="cm-grid-3">
@@ -748,7 +763,10 @@ details.cm-acc p,
     <!-- Avant / Après -->
     <section class="cm-section">
       <h2>Avant / Après</h2>
-      <p class="lead">On connaît ce stress silencieux. Ce planner est fait pour l’éteindre.</p>
+      <p class="lead">
+        On connaît ce stress silencieux. Ce planner est fait pour l’éteindre.
+        <br/>Tu t’es déjà réveillée en te disant : “j’oublie forcément un truc” ?
+      </p>
 
       <div class="cm-beforeafter">
         <div class="cm-card">
@@ -807,8 +825,8 @@ details.cm-acc p,
           </p>
     
           <div class="cm-wow-cta">
-            <a class="cm-btn cm-btn-primary" href="#prix">Accéder au planner · 27€</a>
-            <small>Accès immédiat · Mini guide inclus · Paiement sécurisé</small>
+            <a class="cm-btn cm-btn-primary" href="/start">Commencer · 1 min</a>
+            <small>Aperçu avant paiement · Accès immédiat après déblocage</small>
           </div>
         </div>
     
@@ -825,7 +843,7 @@ details.cm-acc p,
 
     <!-- Pricing -->
     <section class="cm-section" id="prix">
-      <h2>Accéder au planner</h2>
+      <h2>Débloquer ton CarnetMariage</h2>
 
 
       <div class="cm-pricing">
@@ -833,26 +851,25 @@ details.cm-acc p,
           <div class="cm-price-top">
             <div>
               <p class="cm-price-title">CarnetMariage · Premium</p>
-              <div class="cm-pill" style="margin-top:10px;">✨ Notion duplicable · accès immédiat</div>
+              <div class="cm-pill">✨ Carnet prêt à l’emploi · accès immédiat</div>
             </div>
             <div class="cm-pill" title="Paiement sécurisé">🔒 Paiement sécurisé</div>
           </div>
 
           <div class="cm-price">27€ <small>paiement unique</small></div>
 
-          <a class="cm-btn cm-btn-primary" style="width:100%;margin-top:10px;"
-             href="/start">
-            Accéder au planner
+          <a class="cm-btn cm-btn-primary" style="width:100%;margin-top:10px;" href="/start">
+            Commencer (puis débloquer)
           </a>
           <div class="cm-note">
             🌸 Accès immédiat · Paiement sécurisé · Mini guide inclus · Support par email
           </div>
 
           <ul class="cm-includes">
-            <li><i></i> Planner Notion complet (duplicable)</li>
-            <li><i></i> Budget + prestataires + tâches + timeline</li>
-            <li><i></i> Mini guide d’utilisation (PDF ou page Notion)</li>
-            <li><i></i> Utilisable seule ou à deux (si tu partages le workspace)</li>
+            <li><i></i> Carnet de mariage complet (prêt à l’emploi)</li>
+            <li><i></i> Budget · décisions · étapes · suivi</li>
+            <li><i></i> Guide simple pour bien démarrer</li>
+            <li><i></i> Utilisable seule ou à deux</li>
           </ul>
 
 
@@ -943,9 +960,9 @@ details.cm-acc p,
             </span>
 
             <p class="cm-footer-desc">
-              CarnetMariage t’aide à organiser ton mariage sans surcharge mentale : tâches, prestataires, budget,
-              timeline et idées — tout au même endroit. Un planner Notion duplicable + un mini guide pour démarrer
-              simplement, même si tu n’as jamais utilisé Notion.
+              CarnetMariage t’aide à organiser ton mariage sans surcharge mentale : étapes, décisions, budget
+              et suivi — tout au même endroit. Tu réponds à quelques questions, et on te génère un
+              <b>carnet privé</b> prêt à l’emploi, accessible via <b>lien</b>.
             </p>
 
             <div class="cm-footer-badges">
