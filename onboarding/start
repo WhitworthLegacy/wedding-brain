@@ -1,0 +1,184 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ivory:#FAF9F7; --blush:#EAD4D8; --greige:#C7BEB8; --silver:#C9CCD6; --cta:#D8A7B1;
+    --ink:#1f1f1f; --muted:#5d5d5d;
+    --radius:22px;
+    --shadow: 0 16px 44px rgba(0,0,0,.10);
+    --shadow-soft: 0 10px 26px rgba(0,0,0,.06);
+  }
+  .cm{
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+    background:
+      radial-gradient(1200px 600px at 20% 0%, rgba(234,212,216,.58), transparent 60%),
+      radial-gradient(900px 520px at 90% 10%, rgba(201,204,214,.55), transparent 55%),
+      var(--ivory);
+    color: var(--ink);
+    font-family: "Libre Baskerville", Georgia, serif;
+    display:grid;
+    place-items:center;
+    padding: 28px 18px;
+  }
+  .cm-card{
+    width: min(760px, 100%);
+    background: rgba(250,249,247,.85);
+    border: 1px solid rgba(31,31,31,.08);
+    border-radius: calc(var(--radius) + 8px);
+    box-shadow: var(--shadow);
+    padding: 26px;
+  }
+  .cm-pill{
+    display:inline-flex; gap: 8px; align-items:center;
+    padding: 8px 12px; border-radius: 999px;
+    background: rgba(201,204,214,.30);
+    border: 1px solid rgba(31,31,31,.06);
+    color: var(--muted);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 13px;
+  }
+  h1{
+    margin: 14px 0 10px;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.08;
+    letter-spacing: -0.6px;
+  }
+  .cm-lead{
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 15.5px;
+    line-height: 1.8;
+    max-width: 62ch;
+  }
+  .cm-row{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    margin-top: 10px;
+    align-items:end;
+  }
+  label{
+    display:block;
+    margin-bottom: 8px;
+    color: rgba(0,0,0,.72);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 13px;
+  }
+  input{
+    width:100%;
+    padding: 14px 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(31,31,31,.12);
+    background: rgba(250,249,247,.92);
+    outline:none;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 16px;
+  }
+  input:focus{
+    border-color: rgba(216,167,177,.95);
+    box-shadow: 0 0 0 4px rgba(216,167,177,.18);
+  }
+  .cm-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap: 10px;
+    padding: 14px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(31,31,31,.10);
+    cursor:pointer;
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    font-weight: 650;
+    letter-spacing:.2px;
+    user-select:none;
+    white-space:nowrap;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background: linear-gradient(180deg, rgba(216,167,177,.98), rgba(216,167,177,.88));
+    box-shadow: var(--shadow-soft);
+  }
+  .cm-btn:active{ transform: translateY(1px); }
+  .cm-note{
+    margin-top: 14px;
+    color: var(--muted);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 12.8px;
+    line-height:1.7;
+  }
+  .cm-error{
+    margin-top: 10px;
+    color: rgba(0,0,0,.72);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    font-size: 13px;
+    display:none;
+  }
+  .cm-error.show{ display:block; }
+
+  @media (max-width:640px){
+    .cm-row{ grid-template-columns: 1fr; }
+    .cm-btn{ width:100%; }
+  }
+</style>
+
+<div class="cm">
+  <div class="cm-card">
+    <div class="cm-pill">✨ CarnetMariage · ton espace personnel</div>
+    <h1>Félicitations pour votre mariage.</h1>
+    <p class="cm-lead">On commence tout doux. Donne-moi juste la date… et je te guide pas à pas.</p>
+
+    <div class="cm-row">
+      <div>
+        <label for="cmDate">Date du mariage</label>
+        <input id="cmDate" type="date" required />
+      </div>
+      <button class="cm-btn" id="cmNext">Continuer</button>
+    </div>
+
+    <div class="cm-error" id="cmErr">😕 Choisis une date pour continuer.</div>
+    <div class="cm-note">🔒 2 minutes · aucune création de compte · accès immédiat après paiement.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const nextUrl = "/onboarding/1";
+  const dateEl = document.getElementById("cmDate");
+  const btn = document.getElementById("cmNext");
+  const err = document.getElementById("cmErr");
+
+  // preload saved
+  try{
+    const saved = JSON.parse(localStorage.getItem("cm_onboarding") || "{}");
+    if(saved.weddingDate) dateEl.value = saved.weddingDate;
+  }catch(e){}
+
+  function saveDate(){
+    const d = (dateEl.value || "").trim();
+    if(!d){
+      err.classList.add("show");
+      return false;
+    }
+    err.classList.remove("show");
+    const data = safeGet();
+    data.weddingDate = d;
+    safeSet(data);
+    return true;
+  }
+
+  function safeGet(){
+    try{ return JSON.parse(localStorage.getItem("cm_onboarding") || "{}"); }
+    catch(e){ return {}; }
+  }
+  function safeSet(obj){
+    try{ localStorage.setItem("cm_onboarding", JSON.stringify(obj)); }catch(e){}
+  }
+
+  btn.addEventListener("click", ()=>{
+    if(saveDate()) window.location.href = nextUrl;
+  });
+  dateEl.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter" && saveDate()) window.location.href = nextUrl;
+  });
+})();
+</script>
