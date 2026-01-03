@@ -160,10 +160,16 @@
 </style>
 
 <div class="cm">
-  <div class="cm-card">
-    <div class="cm-pill">✨ CarnetMariage · ton espace personnel</div>
-    <h1>Félicitations pour votre mariage.</h1>
-    <p class="cm-lead">On commence tout doux. Donne-moi juste la date… et je te guide pas à pas.</p>
+  <div class="cm-card cm-appear">
+  <div class="cm-pill cm-appear cm-delay-1">✨ CarnetMariage · ton espace personnel</div>
+
+    <h1 class="cm-appear cm-delay-2">
+      Félicitations pour votre mariage.
+    </h1>
+
+    <p class="cm-lead cm-appear cm-delay-3">
+      On commence tout doux. Donne-moi juste la date… et je te guide pas à pas.
+    </p>
 
     <div class="cm-row">
       <div>
@@ -213,7 +219,14 @@
   }
 
   btn.addEventListener("click", ()=>{
-    if(saveDate()) window.location.href = nextUrl;
+    if(!saveDate()) return;
+  
+    btn.style.opacity = ".6";
+    btn.textContent = "On avance…";
+  
+    setTimeout(()=>{
+      window.location.href = nextUrl;
+    }, 550);
   });
   dateEl.addEventListener("keydown", (e)=>{
     if(e.key === "Enter" && saveDate()) window.location.href = nextUrl;
